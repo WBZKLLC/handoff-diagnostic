@@ -298,6 +298,36 @@ export default function ReportDetailScreen() {
           )}
         </View>
 
+        {/* Why this diagnosis? */}
+        {reportData.diagnosis?.primaryTag && DIAGNOSIS_EXPLANATIONS[reportData.diagnosis.primaryTag] && (
+          <View style={styles.whyDiagnosisContainer}>
+            <TouchableOpacity
+              style={styles.whyDiagnosisButton}
+              onPress={() => setWhyExpanded(!whyExpanded)}
+              activeOpacity={0.7}
+            >
+              <Ionicons 
+                name="help-circle-outline" 
+                size={16} 
+                color="#7F8C8D" 
+              />
+              <Text style={styles.whyDiagnosisText}>Why this diagnosis?</Text>
+              <Ionicons
+                name={whyExpanded ? 'chevron-up' : 'chevron-down'}
+                size={16}
+                color="#7F8C8D"
+              />
+            </TouchableOpacity>
+            {whyExpanded && (
+              <View style={styles.whyDiagnosisPanel}>
+                <Text style={styles.whyDiagnosisExplanation}>
+                  {DIAGNOSIS_EXPLANATIONS[reportData.diagnosis.primaryTag]}
+                </Text>
+              </View>
+            )}
+          </View>
+        )}
+
         {/* Evidence Section */}
         {renderEvidence()}
 
