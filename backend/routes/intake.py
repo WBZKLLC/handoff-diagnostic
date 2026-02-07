@@ -3,41 +3,17 @@ from fastapi import APIRouter, HTTPException
 from datetime import datetime
 import uuid
 
-from models.schemas import IntakeInput, ReportResponse, ALLOWED_DOMAINS, DiagnosisResult
+from models.schemas import IntakeInput, ReportResponse, ALLOWED_DOMAINS, DiagnosisResult, ReportContent
 from services import (
     generate_diagnostic_report,
     extract_structure,
+    diagnose,
     load_all_playbooks,
     filter_playbooks_by_domain,
     get_playbook_templates,
 )
 
 router = APIRouter()
-
-
-def generate_diagnosis(extraction: dict, domain: str) -> DiagnosisResult:
-    """
-    Generate diagnosis tags based on extraction analysis.
-    """
-    secondary_tags = []
-    
-    # Analyze extraction for patterns
-    if len(extraction.get("roles", [])) > 3:
-        secondary_tags.append("complex_handoff_chain")
-    
-    if len(extraction.get("systems", [])) > 2:
-        secondary_tags.append("tool_fragmentation")
-    
-    if extraction.get("wait_states"):
-        secondary_tags.append("process_bottleneck")
-    
-    # Primary tag based on common patterns
-    primary_tag = "ownership_ambiguity"
-    
-    return DiagnosisResult(
-        primaryTag=primary_tag,
-        secondaryTags=secondary_tags
-    )
 
 
 def enhance_report_with_playbooks(report_content: dict, playbooks: list, extraction: dict) -> dict:
@@ -120,8 +96,14 @@ async def create_intake(intake: IntakeInput):
     # Extract structured data
     extraction = extract_structure(intake_dict)
     
-    # Generate diagnosis
-    diagnosis = generate_diagnosis(extraction, intake.domain.value)
+    # Generate diagnosis using the new diagnosis service
+    diagnosis_result = diagnose(intake_dict, extraction)
+    
+    # Remove internal scores from response
+    diagnosis = DiagnosisResult(
+        primaryTag=diagnosis_result["primaryTag"],
+        secondaryTags=diagnosis_result["secondaryTags"]
+    )
     
     # Load and filter playbooks by domain
     all_playbooks = load_all_playbooks()
@@ -135,7 +117,6 @@ async def create_intake(intake: IntakeInput):
     enhanced_report = enhance_report_with_playbooks(report_dict, eligible_playbooks, extraction)
     
     # Create enhanced ReportContent from the modified dict
-    from models.schemas import ReportContent
     final_report = ReportContent(**enhanced_report)
     
     # Generate response
