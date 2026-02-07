@@ -1,7 +1,16 @@
 """Models package"""
 from .schemas import (
     UrgencyLevel,
+    DomainType,
+    ALLOWED_DOMAINS,
     IntakeInput,
+    StepModel,
+    HandoffModel,
+    DecisionPointModel,
+    WaitStateModel,
+    ExceptionModel,
+    ExtractionResult,
+    DiagnosisResult,
     ReportContent,
     ReportResponse,
     SaveReportInput,
@@ -11,7 +20,16 @@ from .schemas import (
 
 __all__ = [
     "UrgencyLevel",
+    "DomainType",
+    "ALLOWED_DOMAINS",
     "IntakeInput",
+    "StepModel",
+    "HandoffModel",
+    "DecisionPointModel",
+    "WaitStateModel",
+    "ExceptionModel",
+    "ExtractionResult",
+    "DiagnosisResult",
     "ReportContent",
     "ReportResponse",
     "SaveReportInput",

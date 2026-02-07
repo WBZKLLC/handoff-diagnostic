@@ -1,0 +1,31 @@
+{
+  "id": "healthcare_charting_and_handoffs",
+  "title": "Healthcare Charting and Clinical Handoffs",
+  "domains_allowed": ["healthcare"],
+  "friction_templates": [
+    "Medication reconciliation delays at shift change",
+    "Incomplete charting causing information gaps during handoff",
+    "HIPAA compliance concerns slowing information transfer",
+    "Charge Nurse not notified of critical patient status changes",
+    "Lab results not communicated to covering physician timely"
+  ],
+  "decision_rights_templates": [
+    "RN owns medication reconciliation completion before shift end",
+    "Charge Nurse approves patient assignment changes",
+    "Attending physician must acknowledge critical lab values within 1 hour",
+    "Unit secretary owns appointment scheduling within EHR",
+    "Case manager owns discharge planning communication"
+  ],
+  "stop_doing_templates": [
+    "Stop verbal-only handoffs - use structured SBAR format",
+    "Stop delaying charting until end of shift - chart in real-time",
+    "Stop assuming the next shift will 'figure it out'",
+    "Stop using workarounds for EHR limitations - escalate to IT",
+    "Stop skipping medication reconciliation due to time pressure"
+  ],
+  "experiment_templates": [
+    "Day 1-2: Implement mandatory SBAR handoff checklist for one unit",
+    "Day 3-5: Track charting completion rate at 2-hour intervals",
+    "Day 6-7: Review missed handoff items and adjust checklist"
+  ]
+}

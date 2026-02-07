@@ -1,0 +1,31 @@
+{
+  "id": "logistics_accessorials_and_proof",
+  "title": "Logistics Accessorials and Proof of Delivery",
+  "domains_allowed": ["logistics"],
+  "friction_templates": [
+    "Accessorial charges disputed due to missing documentation",
+    "POD (Proof of Delivery) not captured or transmitted timely",
+    "BOL (Bill of Lading) discrepancies causing billing delays",
+    "Detention time not properly documented or approved",
+    "Appointment scheduling conflicts causing carrier wait times"
+  ],
+  "decision_rights_templates": [
+    "Dispatcher owns accessorial pre-approval up to $X threshold",
+    "Operations manager approves detention over 2 hours",
+    "Driver must capture POD within 15 minutes of delivery",
+    "Billing team has 24h to dispute accessorial charges",
+    "Customer service owns appointment rescheduling communication"
+  ],
+  "stop_doing_templates": [
+    "Stop accepting verbal accessorial agreements - require written approval",
+    "Stop processing invoices without matching POD documentation",
+    "Stop allowing drivers to leave without signed BOL confirmation",
+    "Stop manual entry of detention times - use automated tracking",
+    "Stop batch-processing PODs - transmit in real-time"
+  ],
+  "experiment_templates": [
+    "Day 1-2: Implement real-time POD capture requirement for all deliveries",
+    "Day 3-5: Track detention time automatically from arrival to departure",
+    "Day 6-7: Review accessorial disputes and identify documentation gaps"
+  ]
+}

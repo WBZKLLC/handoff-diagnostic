@@ -1,0 +1,12 @@
+{
+  "companyName": "FastFreight Logistics",
+  "workflowName": "Cross-Dock Shipment Processing",
+  "workflowDescription": "Receiving inbound shipments at the cross-dock facility, sorting by destination, and loading onto outbound trucks. Involves scanning BOLs, verifying piece counts, and coordinating with drivers for appointment times.",
+  "rolesInvolved": "Dock Supervisor, Forklift Operator, Dispatcher, Driver, Billing Clerk",
+  "toolsUsed": "TMS (Transportation Management System), Warehouse Scanner, Dispatch Board, Email, Phone",
+  "whereItGetsStuck": "BOL discrepancies between what was shipped and what arrived cause delays. Drivers wait for resolution while dock team tries to reach shipper. Accessorial charges for detention are disputed because wait time documentation is inconsistent.",
+  "desiredOutcome": "Zero detention disputes, real-time visibility into shipment status, and automatic accessorial documentation with timestamps.",
+  "urgencyLevel": "High",
+  "domain": "logistics",
+  "contactEmail": "ops@fastfreight.example.com"
+}

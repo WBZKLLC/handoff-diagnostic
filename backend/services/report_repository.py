@@ -15,7 +15,9 @@ class ReportRepository:
         doc = {
             "_id": data.reportId,
             "reportId": data.reportId,
-            "intake": data.intake.model_dump(),
+            "intake": data.intake,
+            "extraction": data.extraction,
+            "diagnosis": data.diagnosis,
             "report": data.report.model_dump(),
             "createdAt": data.createdAt,
             "pdfUrl": data.pdfUrl,
@@ -32,7 +34,7 @@ class ReportRepository:
         """Get list of all saved reports"""
         cursor = self.collection.find(
             {},
-            {"_id": 1, "intake.workflowName": 1, "createdAt": 1}
+            {"_id": 1, "intake.workflowName": 1, "intake.domain": 1, "createdAt": 1}
         ).sort("createdAt", -1)
         
         reports = await cursor.to_list(1000)
@@ -42,6 +44,7 @@ class ReportRepository:
                 id=str(r["_id"]),
                 workflowName=r.get("intake", {}).get("workflowName", "Unknown"),
                 createdAt=r.get("createdAt", ""),
+                domain=r.get("intake", {}).get("domain", None),
             )
             for r in reports
         ]

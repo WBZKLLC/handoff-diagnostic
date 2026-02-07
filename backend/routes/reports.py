@@ -47,6 +47,8 @@ async def get_report(
         "id": str(report["_id"]),
         "reportId": report.get("reportId"),
         "intake": report.get("intake"),
+        "extraction": report.get("extraction"),
+        "diagnosis": report.get("diagnosis"),
         "report": report.get("report"),
         "createdAt": report.get("createdAt"),
         "pdfUrl": report.get("pdfUrl"),

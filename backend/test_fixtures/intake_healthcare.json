@@ -1,0 +1,12 @@
+{
+  "companyName": "Regional Medical Center",
+  "workflowName": "Nursing Shift Handoff",
+  "workflowDescription": "End-of-shift handoff between day and night nursing staff. Includes patient status updates, medication reconciliation, pending lab results, and family communication notes. Must comply with HIPAA and hospital documentation standards.",
+  "rolesInvolved": "Day RN, Night RN, Charge Nurse, Unit Secretary, Attending Physician",
+  "toolsUsed": "Epic EHR, Vocera Communication, Whiteboard, Paper Checklist",
+  "whereItGetsStuck": "Charting is often incomplete at shift change. Critical medication changes are communicated verbally but not documented. Night RN discovers missing information 2 hours into shift when patient needs attention.",
+  "desiredOutcome": "100% charting completion before shift handoff, structured SBAR handoff for every patient, and zero missed medication reconciliations.",
+  "urgencyLevel": "High",
+  "domain": "healthcare",
+  "contactEmail": "nursing.director@rmc.example.com"
+}

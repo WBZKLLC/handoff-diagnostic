@@ -1,0 +1,31 @@
+{
+  "id": "general_ownership_ambiguity",
+  "title": "Ownership Ambiguity Resolution",
+  "domains_allowed": ["general", "logistics", "healthcare", "finance", "saas", "manufacturing", "public", "other"],
+  "friction_templates": [
+    "Unclear ownership at handoff points causing delays",
+    "Multiple people assume someone else is responsible",
+    "No single point of accountability for end-to-end workflow",
+    "Decision authority not clearly defined between roles",
+    "Escalation paths are undefined or inconsistent"
+  ],
+  "decision_rights_templates": [
+    "Assign single owner for each workflow stage",
+    "Define explicit escalation thresholds and paths",
+    "Create RACI matrix for critical decision points",
+    "Establish default decision-maker when owner unavailable",
+    "Document decision authority limits for each role"
+  ],
+  "stop_doing_templates": [
+    "Stop assuming 'someone will handle it' - assign explicit owners",
+    "Stop cc'ing everyone hoping someone responds",
+    "Stop scheduling meetings to decide who should decide",
+    "Stop creating shared ownership - it means no ownership",
+    "Stop waiting for consensus on operational decisions"
+  ],
+  "experiment_templates": [
+    "Day 1-2: Assign one person as single owner for one complete workflow cycle",
+    "Day 3-4: Document every decision point and who made it",
+    "Day 5-7: Review ownership gaps and reassign with explicit accountability"
+  ]
+}
