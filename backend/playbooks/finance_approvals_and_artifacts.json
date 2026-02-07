@@ -1,0 +1,28 @@
+{
+  "id": "finance_approvals_and_artifacts",
+  "title": "Finance: Approvals + Artifact Integrity",
+  "domains_allowed": ["finance"],
+  "friction_templates": [
+    "Approvals stall when ownership is unclear or approval criteria are not explicit.",
+    "Work reopens when required artifacts are missing, incomplete, or inconsistent across systems.",
+    "Cycle time increases when exceptions are handled ad-hoc instead of through a defined exception path.",
+    "Duplicate tracking causes mismatched versions and verification loops.",
+    "Queue opacity grows when requests wait without visibility or SLAs."
+  ],
+  "decision_rights_templates": [
+    "Define who approves each request type and what criteria must be met before review.",
+    "Define what artifacts are mandatory (invoice, PO, timestamps, justification) and where they must live.",
+    "Define who can override a rejection and under what conditions.",
+    "Define response SLAs and escalation when an approval is idle."
+  ],
+  "stop_doing_templates": [
+    "Stop starting approvals without complete artifacts.",
+    "Stop using email threads as the system of record.",
+    "Stop allowing multiple versions of the same document to circulate without control."
+  ],
+  "experiment_templates": [
+    "Create a one-page approval checklist and reject any request that fails it for 7 days.",
+    "Add a single intake form that enforces required artifacts before submission.",
+    "Set an SLA for approvals and measure how many exceed it, then add an escalation rule."
+  ]
+}

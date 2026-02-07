@@ -1,0 +1,12 @@
+{
+  "companyName": "CloudScale SaaS",
+  "workflowName": "Feature Request to Deployment",
+  "workflowDescription": "Customer feature requests flow from support tickets to product backlog, through engineering sprint planning, development, QA, and deployment. Requests come in via Slack, Intercom, and email, then get triaged into Jira.",
+  "rolesInvolved": "Support Rep, Product Manager, Engineering Lead, Developer, QA Engineer, DevOps",
+  "toolsUsed": "Intercom, Slack, Jira, Confluence, GitHub, Linear",
+  "whereItGetsStuck": "Context gets lost when requests move from Slack to Jira. No clear acceptance criteria. Constant pings for status updates interrupt deep work. Priority shifts without clear decision rights. Multiple trackers with duplicate info.",
+  "desiredOutcome": "Single source of truth for request status, clear handoff criteria, predictable cycle time without interrupt-driven chaos.",
+  "urgencyLevel": "High",
+  "domain": "saas",
+  "contactEmail": "pm@cloudscale.example.com"
+}

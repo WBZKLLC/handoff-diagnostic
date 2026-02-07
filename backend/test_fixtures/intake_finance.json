@@ -1,0 +1,12 @@
+{
+  "companyName": "Acme Financial Services",
+  "workflowName": "Vendor Invoice Approval",
+  "workflowDescription": "Vendor invoices arrive by email or portal upload. AP clerk verifies against PO and receiving docs. Manager approves based on amount threshold. Finance director approves exceptions. Payment scheduled after all approvals.",
+  "rolesInvolved": "AP Clerk, Department Manager, Finance Director, Controller, Vendor",
+  "toolsUsed": "SAP, Email, Excel, DocuSign, SharePoint",
+  "whereItGetsStuck": "Approvals stall waiting for manager sign-off. Missing artifacts (PO, receiving doc) cause rework. Exception handling is ad-hoc. Multiple versions of invoices in email threads. No visibility into approval queue status.",
+  "desiredOutcome": "Complete artifacts on first submission, clear approval SLAs, single system of record, defined exception path.",
+  "urgencyLevel": "High",
+  "domain": "finance",
+  "contactEmail": "controller@acmefinancial.example.com"
+}

@@ -1,0 +1,28 @@
+{
+  "id": "saas_workflow_handoff_and_context",
+  "title": "SaaS: Workflow Handoffs + Context Switching",
+  "domains_allowed": ["saas"],
+  "friction_templates": [
+    "Work gets blocked when context is split across channels (Slack, tickets, docs) without a single source of truth.",
+    "Handoffs fail when requests move from chat to tickets without clear acceptance criteria or owner acknowledgment.",
+    "Priority shifts create silent rework when decision rights are unclear for what gets pulled in next.",
+    "Status churn increases when stakeholders request updates outside the workflow system.",
+    "Interrupt-driven work prevents deep progress and makes cycle time unpredictable."
+  ],
+  "decision_rights_templates": [
+    "Define who decides priority when multiple stakeholders request changes at once.",
+    "Define who can mark work 'blocked' and what information is required to unblock it.",
+    "Define what qualifies as 'done' before a handoff is accepted by the next role.",
+    "Define the escalation path when a ticket sits idle beyond a threshold."
+  ],
+  "stop_doing_templates": [
+    "Stop using ad-hoc pings as the primary tracking method.",
+    "Stop letting work move forward without acceptance criteria.",
+    "Stop maintaining duplicate trackers unless they have a single owner and clear purpose."
+  ],
+  "experiment_templates": [
+    "Pick one workflow and enforce a single source of truth for status for 7 days.",
+    "Add an 'acceptance checklist' to the handoff step and measure rework reduction.",
+    "Set a rule: no status requests outside the workflow tool; instead, update the ticket once daily."
+  ]
+}
