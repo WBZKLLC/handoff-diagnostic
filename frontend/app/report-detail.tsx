@@ -107,6 +107,7 @@ export default function ReportDetailScreen() {
   const [error, setError] = useState<string | null>(null);
   const [reportData, setReportData] = useState<SavedReport | null>(null);
   const [evidenceExpanded, setEvidenceExpanded] = useState(false);
+  const [whyExpanded, setWhyExpanded] = useState(false);
 
   useEffect(() => {
     fetchReport();
