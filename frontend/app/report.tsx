@@ -14,6 +14,17 @@ import { Ionicons } from '@expo/vector-icons';
 
 const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
+const DOMAIN_LABELS: Record<string, string> = {
+  general: 'General',
+  logistics: 'Logistics',
+  healthcare: 'Healthcare',
+  finance: 'Finance',
+  saas: 'SaaS',
+  manufacturing: 'Manufacturing',
+  public: 'Public Sector',
+  other: 'Other',
+};
+
 interface ReportContent {
   summary: string;
   handoffMap: string[];
@@ -23,9 +34,17 @@ interface ReportContent {
   next7DayExperiment: string[];
 }
 
+interface DiagnosisResult {
+  primaryTag: string;
+  secondaryTags: string[];
+}
+
 interface ReportData {
   reportId: string;
   createdAt: string;
+  intake: Record<string, any>;
+  extraction: Record<string, any>;
+  diagnosis: DiagnosisResult;
   report: ReportContent;
   pdfUrl: string | null;
 }
@@ -36,7 +55,7 @@ export default function ReportScreen() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
 
-  const reportData: ReportData = params.reportData
+  const reportData: ReportData | null = params.reportData
     ? JSON.parse(params.reportData as string)
     : null;
   const intakeData = params.intakeData
@@ -70,7 +89,9 @@ export default function ReportScreen() {
         },
         body: JSON.stringify({
           reportId: reportData.reportId,
-          intake: intakeData,
+          intake: reportData.intake,
+          extraction: reportData.extraction,
+          diagnosis: reportData.diagnosis,
           report: reportData.report,
           createdAt: reportData.createdAt,
           pdfUrl: reportData.pdfUrl,
@@ -92,9 +113,15 @@ export default function ReportScreen() {
 
   const handleDownloadPdf = () => {
     if (reportData.pdfUrl) {
-      // Would open PDF in browser/viewer
       Alert.alert('PDF Download', 'PDF download will be available in Phase 2');
     }
+  };
+
+  const formatTag = (tag: string) => {
+    return tag
+      .split('_')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
   };
 
   const renderSection = (
@@ -138,6 +165,24 @@ export default function ReportScreen() {
           <Ionicons name="business-outline" size={18} color="#3498DB" />
           <Text style={styles.workflowName}>{intakeData.workflowName}</Text>
           <Text style={styles.companyName}>at {intakeData.companyName}</Text>
+        </View>
+
+        {/* Domain & Diagnosis Badge */}
+        <View style={styles.metaBadges}>
+          <View style={styles.domainBadge}>
+            <Ionicons name="layers-outline" size={16} color="#9B59B6" />
+            <Text style={styles.domainText}>
+              {DOMAIN_LABELS[intakeData.domain] || intakeData.domain}
+            </Text>
+          </View>
+          {reportData.diagnosis && (
+            <View style={styles.diagnosisBadge}>
+              <Ionicons name="pulse-outline" size={16} color="#E67E22" />
+              <Text style={styles.diagnosisText}>
+                {formatTag(reportData.diagnosis.primaryTag)}
+              </Text>
+            </View>
+          )}
         </View>
 
         {/* Summary Section */}
@@ -274,7 +319,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderRadius: 10,
-    marginBottom: 20,
+    marginBottom: 12,
     flexWrap: 'wrap',
     gap: 8,
   },
@@ -286,6 +331,40 @@ const styles = StyleSheet.create({
   companyName: {
     fontSize: 14,
     color: '#7F8C8D',
+  },
+  metaBadges: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 10,
+    marginBottom: 16,
+  },
+  domainBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F4ECF7',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 8,
+    gap: 6,
+  },
+  domainText: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#9B59B6',
+  },
+  diagnosisBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FDF2E9',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 8,
+    gap: 6,
+  },
+  diagnosisText: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#E67E22',
   },
   summarySection: {
     backgroundColor: '#FFFFFF',

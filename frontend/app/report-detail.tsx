@@ -14,6 +14,17 @@ import { Ionicons } from '@expo/vector-icons';
 
 const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
+const DOMAIN_LABELS: Record<string, string> = {
+  general: 'General',
+  logistics: 'Logistics',
+  healthcare: 'Healthcare',
+  finance: 'Finance',
+  saas: 'SaaS',
+  manufacturing: 'Manufacturing',
+  public: 'Public Sector',
+  other: 'Other',
+};
+
 interface ReportContent {
   summary: string;
   handoffMap: string[];
@@ -32,13 +43,21 @@ interface IntakeData {
   whereItGetsStuck: string;
   desiredOutcome: string;
   urgencyLevel: string;
+  domain: string;
   contactEmail: string;
+}
+
+interface DiagnosisResult {
+  primaryTag: string;
+  secondaryTags: string[];
 }
 
 interface SavedReport {
   id: string;
   reportId: string;
   intake: IntakeData;
+  extraction: Record<string, any>;
+  diagnosis: DiagnosisResult;
   report: ReportContent;
   createdAt: string;
   pdfUrl: string | null;
@@ -77,6 +96,13 @@ export default function ReportDetailScreen() {
     if (reportData?.pdfUrl) {
       Alert.alert('PDF Download', 'PDF download will be available in Phase 2');
     }
+  };
+
+  const formatTag = (tag: string) => {
+    return tag
+      .split('_')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
   };
 
   const renderSection = (
@@ -160,6 +186,26 @@ export default function ReportDetailScreen() {
           <Ionicons name="business-outline" size={18} color="#3498DB" />
           <Text style={styles.workflowName}>{reportData.intake.workflowName}</Text>
           <Text style={styles.companyName}>at {reportData.intake.companyName}</Text>
+        </View>
+
+        {/* Domain & Diagnosis Badge */}
+        <View style={styles.metaBadges}>
+          {reportData.intake.domain && (
+            <View style={styles.domainBadge}>
+              <Ionicons name="layers-outline" size={16} color="#9B59B6" />
+              <Text style={styles.domainText}>
+                {DOMAIN_LABELS[reportData.intake.domain] || reportData.intake.domain}
+              </Text>
+            </View>
+          )}
+          {reportData.diagnosis?.primaryTag && (
+            <View style={styles.diagnosisBadge}>
+              <Ionicons name="pulse-outline" size={16} color="#E67E22" />
+              <Text style={styles.diagnosisText}>
+                {formatTag(reportData.diagnosis.primaryTag)}
+              </Text>
+            </View>
+          )}
         </View>
 
         <View style={styles.metaInfo}>
@@ -337,6 +383,40 @@ const styles = StyleSheet.create({
   companyName: {
     fontSize: 14,
     color: '#7F8C8D',
+  },
+  metaBadges: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 10,
+    marginBottom: 12,
+  },
+  domainBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F4ECF7',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 8,
+    gap: 6,
+  },
+  domainText: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#9B59B6',
+  },
+  diagnosisBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FDF2E9',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 8,
+    gap: 6,
+  },
+  diagnosisText: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#E67E22',
   },
   metaInfo: {
     flexDirection: 'row',

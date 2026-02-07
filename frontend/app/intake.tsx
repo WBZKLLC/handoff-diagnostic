@@ -10,6 +10,8 @@ import {
   Platform,
   Alert,
   ActivityIndicator,
+  Modal,
+  FlatList,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -18,6 +20,17 @@ import { Ionicons } from '@expo/vector-icons';
 const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
 const URGENCY_OPTIONS = ['Low', 'Medium', 'High'];
+
+const DOMAIN_OPTIONS = [
+  { value: 'general', label: 'General' },
+  { value: 'logistics', label: 'Logistics' },
+  { value: 'healthcare', label: 'Healthcare' },
+  { value: 'finance', label: 'Finance' },
+  { value: 'saas', label: 'SaaS' },
+  { value: 'manufacturing', label: 'Manufacturing' },
+  { value: 'public', label: 'Public Sector' },
+  { value: 'other', label: 'Other' },
+];
 
 interface FormData {
   companyName: string;
@@ -28,6 +41,7 @@ interface FormData {
   whereItGetsStuck: string;
   desiredOutcome: string;
   urgencyLevel: string;
+  domain: string;
   contactEmail: string;
 }
 
@@ -39,6 +53,7 @@ export default function IntakeScreen() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
+  const [showDomainPicker, setShowDomainPicker] = useState(false);
   const [formData, setFormData] = useState<FormData>({
     companyName: '',
     workflowName: '',
@@ -48,6 +63,7 @@ export default function IntakeScreen() {
     whereItGetsStuck: '',
     desiredOutcome: '',
     urgencyLevel: 'Medium',
+    domain: 'general',
     contactEmail: '',
   });
 
@@ -68,6 +84,7 @@ export default function IntakeScreen() {
       'toolsUsed',
       'whereItGetsStuck',
       'desiredOutcome',
+      'domain',
     ];
 
     requiredFields.forEach(field => {
@@ -120,6 +137,10 @@ export default function IntakeScreen() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const getDomainLabel = (value: string) => {
+    return DOMAIN_OPTIONS.find(d => d.value === value)?.label || value;
   };
 
   const renderInput = (
@@ -175,6 +196,28 @@ export default function IntakeScreen() {
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
         >
+          {/* Domain Picker */}
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>
+              Domain<Text style={styles.required}> *</Text>
+            </Text>
+            <TouchableOpacity
+              style={[
+                styles.pickerButton,
+                errors.domain ? styles.inputError : null,
+              ]}
+              onPress={() => setShowDomainPicker(true)}
+            >
+              <Text style={styles.pickerButtonText}>
+                {getDomainLabel(formData.domain)}
+              </Text>
+              <Ionicons name="chevron-down" size={20} color="#7F8C8D" />
+            </TouchableOpacity>
+            {errors.domain ? (
+              <Text style={styles.errorText}>{errors.domain}</Text>
+            ) : null}
+          </View>
+
           {renderInput('Company Name', 'companyName', 'Enter your company name')}
           {renderInput('Workflow Name', 'workflowName', 'e.g., Client Onboarding')}
           {renderInput(
@@ -259,6 +302,56 @@ export default function IntakeScreen() {
             )}
           </TouchableOpacity>
         </ScrollView>
+
+        {/* Domain Picker Modal */}
+        <Modal
+          visible={showDomainPicker}
+          transparent
+          animationType="slide"
+          onRequestClose={() => setShowDomainPicker(false)}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContent}>
+              <View style={styles.modalHeader}>
+                <Text style={styles.modalTitle}>Select Domain</Text>
+                <TouchableOpacity
+                  onPress={() => setShowDomainPicker(false)}
+                  style={styles.modalCloseButton}
+                >
+                  <Ionicons name="close" size={24} color="#2C3E50" />
+                </TouchableOpacity>
+              </View>
+              <FlatList
+                data={DOMAIN_OPTIONS}
+                keyExtractor={(item) => item.value}
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    style={[
+                      styles.domainOption,
+                      formData.domain === item.value && styles.domainOptionActive,
+                    ]}
+                    onPress={() => {
+                      updateField('domain', item.value);
+                      setShowDomainPicker(false);
+                    }}
+                  >
+                    <Text
+                      style={[
+                        styles.domainOptionText,
+                        formData.domain === item.value && styles.domainOptionTextActive,
+                      ]}
+                    >
+                      {item.label}
+                    </Text>
+                    {formData.domain === item.value && (
+                      <Ionicons name="checkmark" size={22} color="#3498DB" />
+                    )}
+                  </TouchableOpacity>
+                )}
+              />
+            </View>
+          </View>
+        </Modal>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -334,6 +427,21 @@ const styles = StyleSheet.create({
     fontSize: 13,
     marginTop: 4,
   },
+  pickerButton: {
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
+    borderRadius: 10,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  pickerButtonText: {
+    fontSize: 16,
+    color: '#2C3E50',
+  },
   urgencyContainer: {
     flexDirection: 'row',
     gap: 12,
@@ -381,6 +489,53 @@ const styles = StyleSheet.create({
   submitButtonText: {
     color: '#FFFFFF',
     fontSize: 18,
+    fontWeight: '600',
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'flex-end',
+  },
+  modalContent: {
+    backgroundColor: '#FFFFFF',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    maxHeight: '60%',
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E0E0E0',
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#2C3E50',
+  },
+  modalCloseButton: {
+    padding: 4,
+  },
+  domainOption: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 16,
+    paddingHorizontal: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F0F0F0',
+  },
+  domainOptionActive: {
+    backgroundColor: '#EBF5FB',
+  },
+  domainOptionText: {
+    fontSize: 16,
+    color: '#2C3E50',
+  },
+  domainOptionTextActive: {
+    color: '#3498DB',
     fontWeight: '600',
   },
 });
