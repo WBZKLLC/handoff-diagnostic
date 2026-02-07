@@ -25,6 +25,16 @@ const DOMAIN_LABELS: Record<string, string> = {
   other: 'Other',
 };
 
+const DIAGNOSIS_EXPLANATIONS: Record<string, string> = {
+  ownership_ambiguity: "This diagnosis is used when responsibility for steps or decisions is unclear, leading to work being passed without clear ownership or follow-through.",
+  decision_rights_unclear: "This diagnosis appears when it is not explicit who has authority to approve, reject, or prioritize work, causing delays and rework.",
+  queue_opacity: "This diagnosis indicates that work waits in queues without clear visibility, SLAs, or ownership, resulting in repeated status checks.",
+  artifact_mismatch: "This diagnosis is used when required documents or inputs are missing, incomplete, or inconsistent, preventing work from progressing.",
+  exception_handling_undefined: "This diagnosis applies when off-plan situations are handled ad hoc instead of through a defined exception path.",
+  duplicate_tracking: "This diagnosis indicates that the same information is tracked in multiple places, increasing reconciliation effort and errors.",
+  context_switching_overload: "This diagnosis is used when work is fragmented across channels, causing frequent interruptions and reduced focus."
+};
+
 interface ReportContent {
   summary: string;
   handoffMap: string[];
