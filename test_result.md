@@ -101,3 +101,146 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
+
+user_problem_statement: |
+  Build a React Native (Expo) app called "Handoff Diagnostic" with a minimal backend API. 
+  A user fills out an intake form for a "stuck workflow" and receives a generated diagnostic report.
+
+backend:
+  - task: "POST /api/intake - Generate diagnostic report"
+    implemented: true
+    working: true
+    file: "backend/routes/intake.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "API generates reports with domain filtering, diagnosis, confidence, and evidence"
+
+  - task: "POST /api/reports/save - Save report to MongoDB"
+    implemented: true
+    working: true
+    file: "backend/routes/reports.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Reports saved with full diagnosis data including confidence and evidence"
+
+  - task: "GET /api/reports - List saved reports"
+    implemented: true
+    working: true
+    file: "backend/routes/reports.py"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Returns list of saved reports with workflow names and dates"
+
+  - task: "GET /api/reports/:id - Get single report"
+    implemented: true
+    working: true
+    file: "backend/routes/reports.py"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Returns full report with confidence and evidence data"
+
+  - task: "Evidence and Confidence Scoring"
+    implemented: true
+    working: true
+    file: "backend/services/diagnosis.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Calculates confidence (0.4-0.95), extracts up to 3 evidence snippets per diagnosis"
+
+frontend:
+  - task: "HomeScreen - Landing page with navigation"
+    implemented: true
+    working: true
+    file: "frontend/app/index.tsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Web preview working correctly - displays home with two main buttons"
+
+  - task: "IntakeScreen - Workflow intake form"
+    implemented: true
+    working: true
+    file: "frontend/app/intake.tsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Form with domain picker, all required fields, validation working"
+
+  - task: "ReportScreen - Display generated report"
+    implemented: true
+    working: true
+    file: "frontend/app/report.tsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Shows diagnosis badge, confidence badge, collapsible evidence section"
+
+  - task: "ReportsListScreen - List saved reports"
+    implemented: true
+    working: true
+    file: "frontend/app/reports.tsx"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Lists all saved reports with pull-to-refresh"
+
+  - task: "ReportDetailScreen - View saved report details"
+    implemented: true
+    working: true
+    file: "frontend/app/report-detail.tsx"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Displays full report with confidence, evidence from MongoDB"
+
+metadata:
+  created_by: "main_agent"
+  version: "1.0"
+  test_sequence: 1
+  run_ui: false
+
+test_plan:
+  current_focus:
+    - "Mobile app black screen issue - user reported"
+  stuck_tasks: []
+  test_all: false
+  test_priority: "high_first"
+
+agent_communication:
+  - agent: "main"
+    message: "All backend APIs verified working via curl. Web preview verified working via screenshots. Evidence and Confidence feature fully tested and working. Waiting for user to verify Expo Go mobile app."
