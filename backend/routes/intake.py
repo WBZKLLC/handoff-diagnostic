@@ -3,7 +3,7 @@ from fastapi import APIRouter, HTTPException
 from datetime import datetime
 import uuid
 
-from models.schemas import IntakeInput, ReportResponse, ALLOWED_DOMAINS, DiagnosisResult, ReportContent
+from models.schemas import IntakeInput, ReportResponse, ALLOWED_DOMAINS, DiagnosisResult, ReportContent, EvidenceItem
 from services import (
     generate_diagnostic_report,
     extract_structure,
@@ -96,13 +96,19 @@ async def create_intake(intake: IntakeInput):
     # Extract structured data
     extraction = extract_structure(intake_dict)
     
-    # Generate diagnosis using the new diagnosis service
+    # Generate diagnosis with confidence and evidence
     diagnosis_result = diagnose(intake_dict, extraction)
     
-    # Remove internal scores from response
+    # Create DiagnosisResult with evidence items
+    evidence_items = [
+        EvidenceItem(**e) for e in diagnosis_result.get("evidence", [])
+    ]
+    
     diagnosis = DiagnosisResult(
         primaryTag=diagnosis_result["primaryTag"],
-        secondaryTags=diagnosis_result["secondaryTags"]
+        secondaryTags=diagnosis_result["secondaryTags"],
+        confidence=diagnosis_result.get("confidence", 0.5),
+        evidence=evidence_items
     )
     
     # Load and filter playbooks by domain

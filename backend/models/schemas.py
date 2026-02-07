@@ -88,9 +88,19 @@ class ExtractionResult(BaseModel):
     exceptions: List[ExceptionModel]
 
 
+class EvidenceItem(BaseModel):
+    """Evidence snippet for diagnosis"""
+    field: str
+    snippet: str
+    tag: str
+
+
 class DiagnosisResult(BaseModel):
+    """Diagnosis result with confidence and evidence"""
     primaryTag: str
     secondaryTags: List[str]
+    confidence: float = Field(default=0.5, ge=0.0, le=1.0)
+    evidence: List[EvidenceItem] = Field(default_factory=list)
 
 
 class ReportContent(BaseModel):
