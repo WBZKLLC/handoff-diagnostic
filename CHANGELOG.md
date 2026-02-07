@@ -8,7 +8,12 @@ Dates use YYYY-MM-DD.
 - Domain field (required): general, logistics, healthcare, finance, saas, manufacturing, public, other
 - Structured extraction service (`/backend/services/extraction.py`) with universal schema
 - Playbook system with domain-specific filtering (`/backend/playbooks/`)
-- Three playbooks: general_ownership_ambiguity, logistics_accessorials_and_proof, healthcare_charting_and_handoffs
+- Five playbooks:
+  - general_ownership_ambiguity (all domains)
+  - logistics_accessorials_and_proof (logistics only)
+  - healthcare_charting_and_handoffs (healthcare only)
+  - saas_workflow_handoff_and_context (saas only)
+  - finance_approvals_and_artifacts (finance only)
 - Enhanced diagnosis service (`/backend/services/diagnosis.py`) with 7 diagnostic tags:
   - ownership_ambiguity
   - decision_rights_unclear
@@ -21,7 +26,7 @@ Dates use YYYY-MM-DD.
 - Secondary tags for reports with multiple issues (within 1 point of primary)
 - Domain picker UI in intake form with modal selection
 - Domain and diagnosis badges displayed on report screens
-- Test fixtures for logistics and healthcare domains
+- Test fixtures for all domain types (logistics, healthcare, saas, finance)
 
 ### Changed
 - Intake endpoint now returns `intake`, `extraction`, and `diagnosis` objects
