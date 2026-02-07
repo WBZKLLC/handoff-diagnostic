@@ -501,6 +501,33 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '500',
   },
+  whyDiagnosisContainer: {
+    marginBottom: 16,
+  },
+  whyDiagnosisButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingVertical: 8,
+  },
+  whyDiagnosisText: {
+    fontSize: 13,
+    color: '#7F8C8D',
+    textDecorationLine: 'underline',
+  },
+  whyDiagnosisPanel: {
+    backgroundColor: '#FFF9E6',
+    borderRadius: 10,
+    padding: 14,
+    marginTop: 8,
+    borderLeftWidth: 3,
+    borderLeftColor: '#F39C12',
+  },
+  whyDiagnosisExplanation: {
+    fontSize: 14,
+    color: '#5D6D7E',
+    lineHeight: 22,
+  },
   evidenceSection: {
     backgroundColor: '#FFFFFF',
     borderRadius: 12,
