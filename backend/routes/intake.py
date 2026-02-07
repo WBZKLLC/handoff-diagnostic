@@ -43,12 +43,19 @@ def generate_diagnosis(extraction: dict, domain: str) -> DiagnosisResult:
 def enhance_report_with_playbooks(report_content: dict, playbooks: list, extraction: dict) -> dict:
     """
     Enhance report content with templates from selected playbooks.
+    Prioritizes domain-specific playbooks over general ones.
     """
-    # Get additional templates from playbooks
-    playbook_friction = get_playbook_templates(playbooks, "friction_templates")
-    playbook_decisions = get_playbook_templates(playbooks, "decision_rights_templates")
-    playbook_stop_doing = get_playbook_templates(playbooks, "stop_doing_templates")
-    playbook_experiments = get_playbook_templates(playbooks, "experiment_templates")
+    # Sort playbooks to put domain-specific ones first (non-general playbooks)
+    sorted_playbooks = sorted(
+        playbooks,
+        key=lambda p: 0 if not p.get("id", "").startswith("general_") else 1
+    )
+    
+    # Get additional templates from playbooks (domain-specific first now)
+    playbook_friction = get_playbook_templates(sorted_playbooks, "friction_templates")
+    playbook_decisions = get_playbook_templates(sorted_playbooks, "decision_rights_templates")
+    playbook_stop_doing = get_playbook_templates(sorted_playbooks, "stop_doing_templates")
+    playbook_experiments = get_playbook_templates(sorted_playbooks, "experiment_templates")
     
     # Merge with existing report content (add unique items)
     existing_friction = set(report_content.get("frictionPoints", []))
