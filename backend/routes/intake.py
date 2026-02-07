@@ -121,11 +121,15 @@ async def create_intake(intake: IntakeInput):
     eligible_playbooks = filter_playbooks_by_domain(all_playbooks, intake.domain.value)
     
     # Generate base report
-    report = generate_diagnostic_report(intake)
-    report_dict = report.model_dump()
+    base_report = generate_diagnostic_report(intake)
+    report_dict = base_report.model_dump()
     
     # Enhance report with playbook templates
     enhanced_report = enhance_report_with_playbooks(report_dict, eligible_playbooks, extraction)
+    
+    # Create enhanced ReportContent from the modified dict
+    from models.schemas import ReportContent
+    final_report = ReportContent(**enhanced_report)
     
     # Generate response
     report_id = str(uuid.uuid4())
@@ -137,6 +141,6 @@ async def create_intake(intake: IntakeInput):
         intake=intake_dict,
         extraction=extraction,
         diagnosis=diagnosis,
-        report=report,
+        report=final_report,
         pdfUrl=None,
     )
