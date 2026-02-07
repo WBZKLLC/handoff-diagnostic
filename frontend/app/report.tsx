@@ -92,6 +92,7 @@ export default function ReportScreen() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [evidenceExpanded, setEvidenceExpanded] = useState(false);
+  const [whyExpanded, setWhyExpanded] = useState(false);
 
   const reportData: ReportData | null = params.reportData
     ? JSON.parse(params.reportData as string)
