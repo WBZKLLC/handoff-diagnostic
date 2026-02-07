@@ -34,6 +34,19 @@ interface ReportContent {
   next7DayExperiment: string[];
 }
 
+interface EvidenceItem {
+  field: string;
+  snippet: string;
+  tag: string;
+}
+
+interface DiagnosisResult {
+  primaryTag: string;
+  secondaryTags: string[];
+  confidence?: number;
+  evidence?: EvidenceItem[];
+}
+
 interface IntakeData {
   companyName: string;
   workflowName: string;
@@ -47,11 +60,6 @@ interface IntakeData {
   contactEmail: string;
 }
 
-interface DiagnosisResult {
-  primaryTag: string;
-  secondaryTags: string[];
-}
-
 interface SavedReport {
   id: string;
   reportId: string;
@@ -63,12 +71,32 @@ interface SavedReport {
   pdfUrl: string | null;
 }
 
+const getConfidenceLevel = (confidence: number): { label: string; color: string } => {
+  if (confidence >= 0.75) {
+    return { label: 'High', color: '#27AE60' };
+  } else if (confidence >= 0.56) {
+    return { label: 'Medium', color: '#F39C12' };
+  }
+  return { label: 'Low', color: '#E74C3C' };
+};
+
+const formatFieldName = (field: string): string => {
+  const fieldLabels: Record<string, string> = {
+    whereItGetsStuck: 'Where It Gets Stuck',
+    workflowDescription: 'Workflow Description',
+    toolsUsed: 'Tools Used',
+    desiredOutcome: 'Desired Outcome',
+  };
+  return fieldLabels[field] || field;
+};
+
 export default function ReportDetailScreen() {
   const router = useRouter();
   const { reportId } = useLocalSearchParams();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [reportData, setReportData] = useState<SavedReport | null>(null);
+  const [evidenceExpanded, setEvidenceExpanded] = useState(false);
 
   useEffect(() => {
     fetchReport();
@@ -127,6 +155,47 @@ export default function ReportDetailScreen() {
     </View>
   );
 
+  const renderEvidence = () => {
+    const evidence = reportData?.diagnosis?.evidence || [];
+    if (evidence.length === 0) return null;
+
+    return (
+      <View style={styles.evidenceSection}>
+        <TouchableOpacity
+          style={styles.evidenceHeader}
+          onPress={() => setEvidenceExpanded(!evidenceExpanded)}
+          activeOpacity={0.7}
+        >
+          <View style={styles.evidenceHeaderLeft}>
+            <Ionicons name="search-outline" size={20} color="#7F8C8D" />
+            <Text style={styles.evidenceTitle}>Evidence</Text>
+            <View style={styles.evidenceCount}>
+              <Text style={styles.evidenceCountText}>{evidence.length}</Text>
+            </View>
+          </View>
+          <Ionicons
+            name={evidenceExpanded ? 'chevron-up' : 'chevron-down'}
+            size={20}
+            color="#7F8C8D"
+          />
+        </TouchableOpacity>
+
+        {evidenceExpanded && (
+          <View style={styles.evidenceContent}>
+            {evidence.map((item, index) => (
+              <View key={index} style={styles.evidenceItem}>
+                <Text style={styles.evidenceField}>
+                  {formatFieldName(item.field)}
+                </Text>
+                <Text style={styles.evidenceSnippet}>"{item.snippet}"</Text>
+              </View>
+            ))}
+          </View>
+        )}
+      </View>
+    );
+  };
+
   if (loading) {
     return (
       <SafeAreaView style={styles.container}>
@@ -167,6 +236,8 @@ export default function ReportDetailScreen() {
     );
   }
 
+  const confidenceInfo = getConfidenceLevel(reportData.diagnosis?.confidence || 0.5);
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -188,7 +259,7 @@ export default function ReportDetailScreen() {
           <Text style={styles.companyName}>at {reportData.intake.companyName}</Text>
         </View>
 
-        {/* Domain & Diagnosis Badge */}
+        {/* Domain, Diagnosis & Confidence Badges */}
         <View style={styles.metaBadges}>
           {reportData.intake.domain && (
             <View style={styles.domainBadge}>
@@ -206,7 +277,18 @@ export default function ReportDetailScreen() {
               </Text>
             </View>
           )}
+          {reportData.diagnosis?.confidence !== undefined && (
+            <View style={[styles.confidenceBadge, { backgroundColor: confidenceInfo.color + '20' }]}>
+              <Ionicons name="analytics-outline" size={16} color={confidenceInfo.color} />
+              <Text style={[styles.confidenceText, { color: confidenceInfo.color }]}>
+                {confidenceInfo.label} ({Math.round(reportData.diagnosis.confidence * 100)}%)
+              </Text>
+            </View>
+          )}
         </View>
+
+        {/* Evidence Section */}
+        {renderEvidence()}
 
         <View style={styles.metaInfo}>
           <View style={styles.metaItem}>
@@ -388,7 +470,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 10,
-    marginBottom: 12,
+    marginBottom: 16,
   },
   domainBadge: {
     flexDirection: 'row',
@@ -417,6 +499,80 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '500',
     color: '#E67E22',
+  },
+  confidenceBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 8,
+    gap: 6,
+  },
+  confidenceText: {
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  evidenceSection: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    marginBottom: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 2,
+    overflow: 'hidden',
+  },
+  evidenceHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F0F0F0',
+  },
+  evidenceHeaderLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  evidenceTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#2C3E50',
+  },
+  evidenceCount: {
+    backgroundColor: '#3498DB',
+    borderRadius: 10,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+  },
+  evidenceCountText: {
+    color: '#FFFFFF',
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  evidenceContent: {
+    padding: 16,
+  },
+  evidenceItem: {
+    marginBottom: 12,
+    paddingBottom: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F0F0F0',
+  },
+  evidenceField: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#7F8C8D',
+    textTransform: 'uppercase',
+    marginBottom: 4,
+  },
+  evidenceSnippet: {
+    fontSize: 14,
+    color: '#5D6D7E',
+    fontStyle: 'italic',
+    lineHeight: 20,
   },
   metaInfo: {
     flexDirection: 'row',
