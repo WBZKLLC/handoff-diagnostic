@@ -37,6 +37,7 @@
         }
       ]
     ],
+    "buildCacheProvider": "eas",
     "experiments": {
       "typedRoutes": true
     },
