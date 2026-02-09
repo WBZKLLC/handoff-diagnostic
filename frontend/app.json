@@ -39,6 +39,13 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "6f00742e-e4d7-4041-a647-835cbae60317"
+      }
+    },
+    "owner": "wbzk"
   }
 }
