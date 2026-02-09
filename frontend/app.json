@@ -12,9 +12,11 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.handoffdiagnostic.app",
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#000"
+        "backgroundColor": "#3498DB"
       },
       "edgeToEdgeEnabled": true
     },
