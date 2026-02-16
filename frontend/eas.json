@@ -15,17 +15,26 @@
       "distribution": "internal",
       "android": {
         "buildType": "apk",
-        "withoutCredentials": true,
-        "gradleCommand": ":app:assembleRelease"
+        "withoutCredentials": true
       }
     },
     "production": {
+      "distribution": "store",
       "android": {
-        "buildType": "apk"
+        "buildType": "app-bundle",
+        "credentialsSource": "local"
+      },
+      "env": {
+        "NODE_ENV": "production"
       }
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "android": {
+        "serviceAccountKeyPath": "./google-services.json",
+        "track": "production"
+      }
+    }
   }
 }
