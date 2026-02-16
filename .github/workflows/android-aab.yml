@@ -16,13 +16,6 @@ jobs:
         with:
           node-version: 18
 
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: 17
-          cache: gradle
-
       - name: Install frontend dependencies (Yarn)
         working-directory: frontend
         run: |
@@ -31,8 +24,15 @@ jobs:
 
       - name: Generate android project (Expo prebuild)
         working-directory: frontend
-        run: |
-          npx expo prebuild --platform android --no-install
+        run: npx expo prebuild --platform android --no-install
+
+      - name: Setup Java (now Gradle files exist)
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: gradle
+          cache-dependency-path: frontend/android/gradle/wrapper/gradle-wrapper.properties
 
       - name: Build AAB
         working-directory: frontend/android
