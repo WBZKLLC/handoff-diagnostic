@@ -26,6 +26,11 @@ jobs:
         working-directory: frontend
         run: npx expo prebuild --platform android --no-install
 
+      - name: Enable New Architecture (Reanimated)
+        working-directory: frontend
+        run: |
+          echo "newArchEnabled=true" >> android/gradle.properties
+
       - name: Setup Java (now Gradle files exist)
         uses: actions/setup-java@v4
         with:
@@ -33,6 +38,9 @@ jobs:
           java-version: 17
           cache: gradle
           cache-dependency-path: frontend/android/gradle/wrapper/gradle-wrapper.properties
+
+      - name: Set NODE_ENV for Expo/Metro
+        run: echo "NODE_ENV=production" >> $GITHUB_ENV
 
       - name: Build AAB
         working-directory: frontend/android
