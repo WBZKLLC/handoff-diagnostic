@@ -48,6 +48,29 @@ jobs:
           echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > frontend/android/app/release.keystore
           ls -la frontend/android/app/release.keystore
 
+      - name: Inject signing config into build.gradle
+        working-directory: frontend/android/app
+        run: |
+          cat >> build.gradle << 'EOF'
+
+          // Injected signing config for release builds
+          android {
+              signingConfigs {
+                  release {
+                      storeFile file("release.keystore")
+                      storePassword System.getenv("ANDROID_KEYSTORE_PASSWORD")
+                      keyAlias System.getenv("ANDROID_KEY_ALIAS")
+                      keyPassword System.getenv("ANDROID_KEY_PASSWORD")
+                  }
+              }
+              buildTypes {
+                  release {
+                      signingConfig signingConfigs.release
+                  }
+              }
+          }
+          EOF
+
       - name: Signing sanity check
         run: |
           test -f frontend/android/app/release.keystore && echo "Keystore file exists ✅"
