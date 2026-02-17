@@ -54,6 +54,13 @@ jobs:
           keytool -list -keystore frontend/android/app/release.keystore \
           -storepass "${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" | head -n 20
 
+      - name: Inspect keystore aliases
+        working-directory: frontend/android/app
+        run: |
+          keytool -list -keystore release.keystore -storepass "$ANDROID_KEYSTORE_PASSWORD"
+        env:
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+
       - name: Inject signing config into build.gradle
         working-directory: frontend/android/app
         run: |
