@@ -42,11 +42,19 @@ jobs:
       - name: Set NODE_ENV for Expo/Metro
         run: echo "NODE_ENV=production" >> $GITHUB_ENV
 
-      - name: Build AAB
+      - name: Decode keystore
+        run: |
+          echo "${{ secrets.KEYSTORE_FILE }}" | base64 --decode > release-key.keystore
+
+      - name: Build signed AAB
         working-directory: frontend/android
         run: |
           chmod +x gradlew
-          ./gradlew bundleRelease --stacktrace
+          ./gradlew bundleRelease \
+            -Pandroid.injected.signing.store.file=../../release-key.keystore \
+            -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \
+            -Pandroid.injected.signing.key.alias=${{ secrets.KEY_ALIAS }} \
+            -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }}
 
       - name: Upload AAB artifact
         uses: actions/upload-artifact@v4
