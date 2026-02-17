@@ -45,18 +45,14 @@ jobs:
 
       - name: Decode Android keystore
         run: |
+          mkdir -p frontend/android/app
           printf '%s' "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > frontend/android/app/release.keystore
-          ls -la frontend/android/app/release.keystore
+          ls -l frontend/android/app/release.keystore
 
-      - name: Verify keystore contains expected alias
+      - name: Verify keystore loads
         run: |
           keytool -list -keystore frontend/android/app/release.keystore \
-            -storepass "${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" | sed -n '1,80p'
-
-      - name: Print alias names only
-        run: |
-          keytool -list -keystore frontend/android/app/release.keystore \
-            -storepass "${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" | grep -E "^[a-zA-Z0-9_.-]+," || true
+          -storepass "${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" | head -n 20
 
       - name: Inject signing config into build.gradle
         working-directory: frontend/android/app
@@ -81,27 +77,15 @@ jobs:
           }
           EOF
 
-      - name: Confirm signing config exists in app Gradle
-        run: |
-          grep -n "signingConfigs" frontend/android/app/build.gradle || true
-          grep -n "release.keystore" frontend/android/app/build.gradle || true
-
-      - name: Signing sanity check
-        run: |
-          test -f frontend/android/app/release.keystore && echo "Keystore file exists ✅"
-          echo "Alias length: ${#ANDROID_KEY_ALIAS}"
-        env:
-          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
-
       - name: Build signed AAB
         working-directory: frontend/android
-        run: |
-          chmod +x gradlew
-          ./gradlew bundleRelease --stacktrace
         env:
           ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          chmod +x gradlew
+          ./gradlew bundleRelease --stacktrace --no-daemon
 
       - name: Upload AAB artifact
         uses: actions/upload-artifact@v4
