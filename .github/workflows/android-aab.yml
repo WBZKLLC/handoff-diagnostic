@@ -45,8 +45,18 @@ jobs:
 
       - name: Decode Android keystore
         run: |
-          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > frontend/android/app/release.keystore
+          printf '%s' "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > frontend/android/app/release.keystore
           ls -la frontend/android/app/release.keystore
+
+      - name: Verify keystore contains expected alias
+        run: |
+          keytool -list -keystore frontend/android/app/release.keystore \
+            -storepass "${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" | sed -n '1,80p'
+
+      - name: Print alias names only
+        run: |
+          keytool -list -keystore frontend/android/app/release.keystore \
+            -storepass "${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" | grep -E "^[a-zA-Z0-9_.-]+," || true
 
       - name: Inject signing config into build.gradle
         working-directory: frontend/android/app
@@ -70,6 +80,11 @@ jobs:
               }
           }
           EOF
+
+      - name: Confirm signing config exists in app Gradle
+        run: |
+          grep -n "signingConfigs" frontend/android/app/build.gradle || true
+          grep -n "release.keystore" frontend/android/app/build.gradle || true
 
       - name: Signing sanity check
         run: |
