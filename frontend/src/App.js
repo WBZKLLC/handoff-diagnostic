@@ -738,13 +738,23 @@ const HandoffDiagnosticBrief = () => {
       {/* Footer */}
       <footer className="brief-footer" data-testid="footer">
         <p>Handoff Diagnostic — Operational Safety Layer for AI-Integrated Systems</p>
+        <button onClick={() => navigate('/admin')} className="admin-link" data-testid="admin-link">
+          View Inquiries
+        </button>
       </footer>
     </div>
   );
 };
 
 function App() {
-  return <HandoffDiagnosticBrief />;
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<HandoffDiagnosticBrief />} />
+        <Route path="/admin" element={<AdminPage />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
 export default App;
