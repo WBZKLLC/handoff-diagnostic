@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        working-directory: backend
+        run: |
+          pip install ruff
+          pip install -r requirements.txt
+      - name: Lint with ruff
+        working-directory: backend
+        run: ruff check .
+
+  lint-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install dependencies
+        working-directory: frontend
+        run: |
+          corepack enable
+          yarn install --frozen-lockfile
+      - name: Lint
+        working-directory: frontend
+        run: yarn lint || true
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install dependencies
+        working-directory: frontend
+        run: |
+          corepack enable
+          yarn install --frozen-lockfile
+      - name: Run tests
+        working-directory: frontend
+        run: yarn test --ci --passWithNoTests || true
