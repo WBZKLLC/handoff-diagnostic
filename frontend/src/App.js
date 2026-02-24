@@ -1,9 +1,81 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "@/App.css";
 import axios from "axios";
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
+
+// Admin Page Component
+const AdminPage = () => {
+  const [inquiries, setInquiries] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchInquiries = async () => {
+      try {
+        const response = await axios.get(`${API}/pilot-inquiries`);
+        setInquiries(response.data);
+      } catch (err) {
+        console.error('Failed to fetch inquiries:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchInquiries();
+  }, []);
+
+  return (
+    <div className="admin-container" data-testid="admin-page">
+      <header className="admin-header">
+        <h1>Pilot Program Inquiries</h1>
+        <button onClick={() => navigate('/')} className="back-btn" data-testid="back-btn">
+          ← Back to Brief
+        </button>
+      </header>
+      
+      {loading ? (
+        <p className="loading-text">Loading inquiries...</p>
+      ) : inquiries.length === 0 ? (
+        <div className="empty-state" data-testid="empty-state">
+          <p>No inquiries yet. Share your brief to start receiving applications!</p>
+        </div>
+      ) : (
+        <div className="inquiries-list" data-testid="inquiries-list">
+          {inquiries.map((inquiry) => (
+            <div key={inquiry.id} className="inquiry-card" data-testid="inquiry-card">
+              <div className="inquiry-header">
+                <h3>{inquiry.name}</h3>
+                <span className="inquiry-date">
+                  {new Date(inquiry.submitted_at).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  })}
+                </span>
+              </div>
+              <div className="inquiry-details">
+                <p><strong>Email:</strong> <a href={`mailto:${inquiry.email}`}>{inquiry.email}</a></p>
+                <p><strong>Organization:</strong> {inquiry.organization}</p>
+                {inquiry.message && (
+                  <div className="inquiry-message">
+                    <strong>Message:</strong>
+                    <p>{inquiry.message}</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+      
+      <p className="inquiry-count">{inquiries.length} total inquiries</p>
+    </div>
+  );
+};
 
 const HandoffDiagnosticBrief = () => {
   const [formData, setFormData] = useState({
@@ -15,6 +87,7 @@ const HandoffDiagnosticBrief = () => {
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
