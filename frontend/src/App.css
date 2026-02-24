@@ -1141,6 +1141,18 @@ blockquote strong {
   transform: translateY(-2px);
 }
 
+.submit-btn:disabled {
+  background: var(--border-light);
+  cursor: not-allowed;
+  transform: none;
+}
+
+.error-message {
+  color: var(--danger);
+  font-size: 14px;
+  margin-top: 12px;
+}
+
 .success-message {
   text-align: center;
   padding: 60px 20px;
