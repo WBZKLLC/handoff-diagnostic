@@ -21,3 +21,7 @@ For questions or concerns regarding this privacy policy, please contact:
 ---
 
 © 2026 Handoff Diagnostic. All rights reserved.
+
+---
+
+**See also:** [Privacy & Usage FAQ](PRIVACY_USAGE_FAQ.md) • [Security Policy](SECURITY.md)
