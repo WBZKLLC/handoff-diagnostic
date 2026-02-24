@@ -1,63 +1,48 @@
-# Handoff Diagnostic - Technical Brief Static Page
+# Handoff Diagnostic - Technical Brief
 
 ## Original Problem Statement
-Create a comprehensive static page displaying a technical brief for "Handoff Diagnostic" - an Operational Safety Layer for AI-Integrated Systems, including HIS Score methodology, example workflows, implementation architecture, sample audit report, and pilot program contact form.
+Create a comprehensive static page displaying a technical brief for "Handoff Diagnostic" with pilot program contact form that saves submissions to database.
 
 ## What's Been Implemented (Jan 2026)
 
-### Phase 1 - Initial Brief
-- Hero section with visual handoff diagram (Human → Model → System)
-- Problem section with risk list and failure modes
-- Core Hypothesis section
-
-### Phase 2 - Full Methodology (Current)
-- **Handoff Integrity Score (HIS) v0.1**
-  - Score range 0-100 with 4 interpretation levels
-  - 5 component cards (AC, DT, OH, SI, RA)
-  - Calculation formula and data fields
-  - Output specifications
-
-- **Example: Where Failures Actually Happen**
-  - Compliance review workflow use case
-  - 5-step workflow with warning highlights
-  - Handoff Diagnostic flags visualization
-  - HIS=62 output example
-
-- **Implementation Architecture (High-Level)**
-  - Capture layer, storage, scoring engine, reporting, governance hooks
-  - 3 integration options (Manual, Semi-automated, Automated)
-
-- **Sample Output: Handoff Audit Report (v0.1)**
-  - Score card with 74/100 overall
-  - 5 sub-scores with color coding
-  - Top findings, risk statement, fix-next actions
-  - Retest criteria
-
-- **Contact Form (Pilot Program)**
-  - Name, email, organization, message fields
-  - Client-side submission with success message
-
+### Technical Brief Page
+- Hero section with visual handoff diagram
+- Problem, Hypothesis sections
+- HIS Score v0.1 methodology (5 components, scoring, data fields)
+- Example workflow with failure flags
+- Implementation Architecture
+- Sample Audit Report (74/100 example)
 - Method, Deliverables, Why Now, Vision sections
 
-## Tech Stack
-- React.js (frontend only)
-- TailwindCSS + Custom CSS
-- No backend required (static page)
+### Pilot Program System
+- **Contact Form** - Name, email, organization, message fields
+- **Backend API** - POST /api/pilot-inquiry (saves to MongoDB)
+- **Admin Dashboard** - /admin page to view all submissions
+- Submissions sorted by date (newest first)
+- Clickable email links for easy follow-up
 
-## Live URL
-https://handoff-diagnostic-1.preview.emergentagent.com
+## URLs
+- **Main Brief:** https://handoff-diagnostic-1.preview.emergentagent.com
+- **Admin Dashboard:** https://handoff-diagnostic-1.preview.emergentagent.com/admin
+
+## Tech Stack
+- Frontend: React.js + TailwindCSS
+- Backend: FastAPI + MongoDB
+- Database: MongoDB (pilot_inquiries collection)
+
+## API Endpoints
+- `POST /api/pilot-inquiry` - Submit new inquiry
+- `GET /api/pilot-inquiries` - List all inquiries (for admin)
 
 ## Testing Status
-- All 11 sections: PASSED
-- Responsive design: PASSED
-- Contact form: PASSED
-- 100% test success rate
+- Form submission: PASSED
+- Database storage: PASSED
+- Admin dashboard: PASSED
 
 ## Next Action Items
-- None currently - all requested features complete
+- None - all features complete
 
-## Future/Backlog (P2)
-- Backend integration for contact form (email notifications)
-- Downloadable PDF export
-- Interactive HIS calculator tool
-- Multi-language support
+## Future/Backlog
+- Password-protect admin page
+- Export inquiries to CSV
+- Email notifications (requires Resend API key)
