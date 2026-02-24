@@ -1191,6 +1191,158 @@ blockquote strong {
   color: var(--text-muted);
 }
 
+.admin-link {
+  margin-top: 16px;
+  padding: 8px 16px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-muted);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.admin-link:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* Admin Page Styles */
+.admin-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 24px;
+  min-height: 100vh;
+}
+
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.admin-header h1 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.back-btn {
+  padding: 10px 20px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-secondary);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.back-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.loading-text {
+  color: var(--text-muted);
+  text-align: center;
+  padding: 60px 0;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 80px 20px;
+  background: var(--bg-secondary);
+  border: 1px dashed var(--border);
+  border-radius: 12px;
+}
+
+.empty-state p {
+  color: var(--text-muted);
+  font-size: 15px;
+}
+
+.inquiries-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.inquiry-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.inquiry-card:hover {
+  border-color: var(--accent);
+}
+
+.inquiry-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background: var(--bg-tertiary);
+  border-bottom: 1px solid var(--border);
+}
+
+.inquiry-header h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.inquiry-date {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.inquiry-details {
+  padding: 20px;
+}
+
+.inquiry-details p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.inquiry-details a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.inquiry-details a:hover {
+  text-decoration: underline;
+}
+
+.inquiry-message {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.inquiry-message p {
+  margin-top: 8px;
+  color: var(--text-primary);
+  line-height: 1.6;
+}
+
+.inquiry-count {
+  text-align: center;
+  margin-top: 32px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
 /* Responsive */
 @media (max-width: 640px) {
   .brief-container {
