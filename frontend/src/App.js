@@ -9,11 +9,36 @@ const API = `${BACKEND_URL}/api`;
 // Admin Page Component
 const AdminPage = () => {
   const [inquiries, setInquiries] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [authenticated, setAuthenticated] = useState(false);
+  const [password, setPassword] = useState('');
+  const [authError, setAuthError] = useState('');
   const navigate = useNavigate();
 
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setAuthError('');
+    try {
+      await axios.post(`${API}/admin/verify`, { password });
+      setAuthenticated(true);
+      sessionStorage.setItem('adminAuth', 'true');
+    } catch (err) {
+      setAuthError('Invalid password');
+    }
+  };
+
   useEffect(() => {
+    // Check if already authenticated this session
+    if (sessionStorage.getItem('adminAuth') === 'true') {
+      setAuthenticated(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!authenticated) return;
+    
     const fetchInquiries = async () => {
+      setLoading(true);
       try {
         const response = await axios.get(`${API}/pilot-inquiries`);
         setInquiries(response.data);
@@ -24,7 +49,36 @@ const AdminPage = () => {
       }
     };
     fetchInquiries();
-  }, []);
+  }, [authenticated]);
+
+  if (!authenticated) {
+    return (
+      <div className="admin-container" data-testid="admin-login">
+        <div className="login-box">
+          <h2>Admin Access</h2>
+          <p>Enter password to view pilot inquiries</p>
+          <form onSubmit={handleLogin}>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Password"
+              className="password-input"
+              data-testid="password-input"
+              autoFocus
+            />
+            <button type="submit" className="login-btn" data-testid="login-btn">
+              Access Dashboard
+            </button>
+            {authError && <p className="auth-error" data-testid="auth-error">{authError}</p>}
+          </form>
+          <button onClick={() => navigate('/')} className="back-link">
+            ← Back to Brief
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="admin-container" data-testid="admin-page">
