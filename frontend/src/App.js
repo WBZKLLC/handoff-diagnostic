@@ -642,9 +642,10 @@ const HandoffDiagnosticBrief = () => {
                   data-testid="input-message"
                 ></textarea>
               </div>
-              <button type="submit" className="submit-btn" data-testid="submit-btn">
-                Request Pilot Access
+              <button type="submit" className="submit-btn" data-testid="submit-btn" disabled={submitting}>
+                {submitting ? 'Submitting...' : 'Request Pilot Access'}
               </button>
+              {error && <p className="error-message" data-testid="error-message">{error}</p>}
             </form>
           ) : (
             <div className="success-message" data-testid="success-message">
