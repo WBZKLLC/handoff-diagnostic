@@ -1,5 +1,9 @@
 import { useState } from "react";
 import "@/App.css";
+import axios from "axios";
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const API = `${BACKEND_URL}/api`;
 
 const HandoffDiagnosticBrief = () => {
   const [formData, setFormData] = useState({
@@ -9,12 +13,23 @@ const HandoffDiagnosticBrief = () => {
     message: ''
   });
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState(null);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // In production, this would send to backend
-    console.log('Pilot inquiry:', formData);
-    setSubmitted(true);
+    setSubmitting(true);
+    setError(null);
+    
+    try {
+      await axios.post(`${API}/pilot-inquiry`, formData);
+      setSubmitted(true);
+    } catch (err) {
+      console.error('Submission error:', err);
+      setError('Failed to submit. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleChange = (e) => {
