@@ -95,6 +95,18 @@ async def submit_pilot_inquiry(input: PilotInquiryCreate):
     logger.info(f"New pilot inquiry from {input.email} at {input.organization}")
     return inquiry_obj
 
+# Admin authentication
+ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD', 'handoff2026')
+
+class AdminAuth(BaseModel):
+    password: str
+
+@api_router.post("/admin/verify")
+async def verify_admin(auth: AdminAuth):
+    if auth.password == ADMIN_PASSWORD:
+        return {"status": "success", "message": "Authenticated"}
+    raise HTTPException(status_code=401, detail="Invalid password")
+
 @api_router.get("/pilot-inquiries", response_model=List[PilotInquiry])
 async def get_pilot_inquiries():
     inquiries = await db.pilot_inquiries.find({}, {"_id": 0}).sort("submitted_at", -1).to_list(1000)
